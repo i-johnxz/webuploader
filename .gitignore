@@ -168,6 +168,6 @@ __pycache__/
 
 
 .sass-cache/
-.vs
-.idea
+.vs/
+.idea/
 
