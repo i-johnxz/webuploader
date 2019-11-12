@@ -168,5 +168,6 @@ __pycache__/
 
 
 .sass-cache/
-/src/.idea
+.vs
+.idea
 
