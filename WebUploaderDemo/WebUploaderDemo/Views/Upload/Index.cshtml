@@ -54,36 +54,48 @@
         };
     </script>
     <script type="text/javascript">
-        $(function () {
+        $(function() {
             var _chunk = 0;
             var exitsChunks = [];
             WebUploader.Uploader.register({
-                "before-send-file": "beforeSendFile",
-                "before-send": "beforeSend",
-                "after-send-file": "afterSendFile"
-            }, {
-                beforeSendFile: function (file) {
-                    console.info('beforeSendFile', Global.FileQueueds, file);
-                    $.each(Global.FileQueueds, function (idx, row) {
-                        if (row.id == file.id) {
-                            //_chunk = row.chunk;
-                        }
-                    });
-                    //_chunk = Global.FileQueueds.find(f=>f.id == file.id).chunk;
+                    "before-send-file": "beforeSendFile",
+                    "before-send": "beforeSend",
+                    "after-send-file": "afterSendFile"
                 },
-                beforeSend: function (block) {
-                    var blob = block.blob.getSource(),
-                        deferred = $.Deferred();
-                    console.info('blob', block);
-                    //根据md5与服务端匹配，如果重复，则跳过。
-                    var md5 = Global.GetFileQueued(block.file.id).md5;
-                    
-                    /*this.owner.md5File(block.file, block.start, block.end)
-                            .then(function (fileMd5) { 
-                               console.log('block:', fileMd5); 
-                            });*/
-                    
-                    $.ajax({
+                {
+                    beforeSendFile: function(file) {
+                        console.info('beforeSendFile', Global.FileQueueds, file);
+                        $.each(Global.FileQueueds,
+                            function(idx, row) {
+                                if (row.id == file.id) {
+                                    //_chunk = row.chunk;
+                                }
+                            });
+                        //_chunk = Global.FileQueueds.find(f=>f.id == file.id).chunk;
+                    },
+                    beforeSend: function(block) {
+                        var blob = block.blob.getSource(),
+                            deferred = $.Deferred();
+                        console.info('blob', block);
+                        //根据md5与服务端匹配，如果重复，则跳过。
+                        var fileQueued = Global.GetFileQueued(block.file.id);
+                        console.log('fileQueued', fileQueued);
+
+                        var md5 = Global.GetFileQueued(block.file.id).md5;
+
+                        /*this.owner.md5File(block.file, block.start, block.end)
+                                .then(function (fileMd5) { 
+                                   console.log('block:', fileMd5); 
+                                });*/
+
+                        if (fileQueued.uploadedChunks.indexOf(block.chunk) > -1) {
+                            deferred.reject();
+                        } else {
+                            deferred.resolve();
+                        }
+                        return deferred.promise();
+
+                        @*$.ajax({
                         type: 'POST',
                         url: '@Url.Action("CheckChunk")',
                         data: {
@@ -106,7 +118,7 @@
                      }, function (jqXHR, textStatus, errorThrown) { 
                         deferred.resolve();
                     });
-                    return deferred.promise();
+                    return deferred.promise();*@
 
                 },
                 afterSendFile: function (file) {
