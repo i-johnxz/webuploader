@@ -8,6 +8,7 @@
         GetMaxChunk: '/Upload/GetMaxChunk',
         //进行文件合并的地址
         MergeFiles: '/Upload/MergeFiles',
+        GetUploadedChunk: '/Upload/GetUploadedChunk'
     };
 
     // 当domReady的时候开始初始化
@@ -199,6 +200,24 @@
                     temp_obj[temp_key] = val;
                     $.extend(uploader.options.formData, temp_obj);
                     var fileObj = $('#' + file.id);
+                    
+
+                    $.ajax({
+                        url: INTEROP_PATH.GetUploadedChunk,
+                        async: true,
+                        data: {
+                            fileName: file.name,
+                            md5: val,
+                            chunkSize: 0
+                        },
+                        success: function(response) {
+                            //console.log('response', response);
+                            Global.FileQueueds.push({ id: file.id, md5: val, size: file.size, ext: file.ext, chunk: 0, uploadedChunks: response });
+                            console.info('fileCheckMaxChunk', file, 0);
+                            fileObj.find('.progress_check').attr('data-checkedcomplete', true).text('验证完成，等待上传').css('color', '#aaa');
+                        }
+                    });
+
                     //file.fileMd5 = val;
                     /*$.ajax({
                         url: INTEROP_PATH.GetMaxChunk,
