@@ -199,6 +199,9 @@
                     temp_obj[temp_key] = val;
                     $.extend(uploader.options.formData, temp_obj);
                     var fileObj = $('#' + file.id);
+                    Global.FileQueueds.push({ id: file.id, md5: val, size: file.size, ext: file.ext, chunk: 0 });
+                    console.info('fileCheckMaxChunk', file, 0);
+                    fileObj.find('.progress_check').attr('data-checkedcomplete', true).text('验证完成，等待上传').css('color', '#aaa');
                     //file.fileMd5 = val;
                     /*$.ajax({
                         url: INTEROP_PATH.GetMaxChunk,

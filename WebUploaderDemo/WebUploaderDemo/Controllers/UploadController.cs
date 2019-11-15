@@ -22,7 +22,7 @@ namespace WebUploaderDemo.Controllers
         }
 
 
-        public int[] GetUploadedChunk(string fileName, string md5, int chunk, int chunkSize)
+        public int[] GetUploadedChunk(string fileName, string md5, int chunkSize)
         {
             var sourcePath = Path.Combine(UploadPath, "chunk\\" + md5 + "\\");
             
