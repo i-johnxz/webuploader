@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -15,6 +16,8 @@ namespace WebUploaderDemo.Controllers
         private readonly string UploadPath = Path.GetFullPath(
             Path.Combine(Directory.GetCurrentDirectory(),
                 "UploadFiles/files/"));
+
+        private BlockingCollection<Models.File> _fileCollections = new BlockingCollection<Models.File>();
         
         public IActionResult Index()
         {
