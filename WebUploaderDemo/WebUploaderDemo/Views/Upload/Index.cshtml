@@ -79,7 +79,6 @@
                         console.info('blob', block);
                         //根据md5与服务端匹配，如果重复，则跳过。
                         var fileQueued = Global.GetFileQueued(block.file.id);
-                        console.log('fileQueued', fileQueued);
 
                         var md5 = Global.GetFileQueued(block.file.id).md5;
 
